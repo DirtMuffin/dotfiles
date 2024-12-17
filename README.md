@@ -1,2 +1,2 @@
 # dotfiles
-various config files
+Various config files for terminals and other *nix stuff
