@@ -9,20 +9,17 @@ install_prereqs() {
     mkdir -p $HOME/gits/dirtmuffin
     # update packages, install git and zsh
     sudo apt update
-    sudo apt install -y git zsh
+    sudo apt install -y git zsh unzip
     # install Oh My ZSH!
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     echo "Dependencies installed sucessfully."
 }
 
-# clones the entire nerd fonts repo and installs the needed fonts
+# Extracts the font into the shared font folder.
 install_fonts() {
-echo "Installing font(s). Please wait..."
-cd $HOME/gits
-git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git # Only way to do this according to official docs... Takes a while
-cd nerd-fonts/
-./install.sh CaskaydiaCove # runs nerdfont's installer script to unpack needed font from downloaded repo.
-echo "Font(s) installed sucessfully."
+    cd $HOME/gits/dirtmuffin/dotfiles
+    unzip CascadiaCode.zip -d /usr/share/fonts
+    fc-cache -fv
 }
 
 # Pulls dirtmuffin/dotfiles repo and replaces relevant config files in home directory
