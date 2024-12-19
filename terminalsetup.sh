@@ -1,5 +1,7 @@
 #!/bin/bash
 
+clear # clears the terminal so the installer is displayed on a clean screen
+
 # Installs dependencies for main installation
 install_prereqs() {
     echo "Installation of dependencies has begun. Please wait..."
@@ -47,6 +49,7 @@ server_addons() {
     echo "server packages installed sucessfully."
 }
 
+# Removes downloaded files/folders that are no longer needed after installation. User choice changes if/what is removed.
 cleanup_process() {
     echo "Cleanup process has begun. Please wait..."
     
@@ -84,10 +87,6 @@ install_control() {
         install_fonts
         install_main
         echo "Installation has completed."
-        ;;
-    3)
-        echo "Installation aborted by user. Exiting..."
-        exit 1
         ;;
     *)
         echo "Invalid choice. Exiting..."
@@ -130,12 +129,18 @@ echo "2. Desktop Install (Excludes btop, bottom, and includes fonts) (Font insta
 echo "3. EXIT"
 read -p "Choice: " CHOICE1
 
-# Prompt user to choose if cleanup happens
-echo "Post-install cleanup options. Please choose one: "
-echo "1. Cleanup everything (Removes DirtMuffin repo and unused fonts)"
-echo "2. Cleanup fonts only (Removes unused fonts, leaves DirtMuffin repo intact)"
-echo "3. No cleanup"
-read -p "Choice: " CHOICE2
+# Exits the program is user chooses to exit, else program moves forward.
+if [ "$CHOICE1" -eq 3 ]; then
+    echo "Program exited by user."
+    exit 1
+else
+    # Prompt user to choose if cleanup happens
+    echo "Post-install cleanup options. Please choose one: "
+    echo "1. Cleanup everything (Removes DirtMuffin repo and unused fonts)"
+    echo "2. Cleanup fonts only (Removes unused fonts, leaves DirtMuffin repo intact)"
+    echo "3. No cleanup"
+    read -p "Choice: " CHOICE2
+fi
 
 # Run the installation processes
 install_control
