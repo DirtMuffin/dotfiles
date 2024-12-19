@@ -11,7 +11,7 @@ install_prereqs() {
     sudo apt update
     sudo apt install -y git zsh
     # install Oh My ZSH!
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     echo "Dependencies installed sucessfully."
 }
 
