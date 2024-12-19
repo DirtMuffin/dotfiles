@@ -83,7 +83,7 @@ echo "Select an option:"
 echo "1. Install"
 echo "2. Install (NO CLEANUP)"
 echo "3. EXIT"
-read -p CHOICE
+read -p "Choice: " CHOICE
 
 # Process user choice and run cooresponding install
 case $CHOICE in
