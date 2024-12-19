@@ -102,3 +102,11 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# Runs TMUX on startup
+if command -v tmux >/dev/null 2>&1; then
+    # Start tmux only if not already inside a tmux session
+    [ -z "$TMUX" ] && exec tmux
+fi
+# Cowsay extra animals <3
+COWPATH="$COWPATH:$HOME/.cowsay/cowfiles"
