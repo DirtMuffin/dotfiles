@@ -1,21 +1,17 @@
 #!/bin/bash
 
-# Creates directories needed for install
-create_directories() {
-
-    mkdir -p $HOME/gits/dirtmuffin
-}
-
 # Installs dependencies for main installation
 install_prereqs() {
     echo "Installation of dependencies has begun. Please wait..."
+    # Create base directory if it doesn't exist
+    mkdir -p $HOME/gits/dirtmuffin
     # update packages, install git and zsh
     sudo apt update
     sudo apt install -y git zsh
     echo "Dependencies installed sucessfully."
 }
 
-# Installs fonts TODO: Don't do this unless target system has a gui
+# clones the entire nerd fonts repo and installs the needed fonts
 install_fonts() {
 echo "Installing font(s). Please wait..."
 cd $HOME/gits
@@ -44,63 +40,50 @@ install_main() {
     echo "Main installation has been completed sucessfully."
 }
 
+# Installs server-specific packages
+server_addons() {
+    echo "Installing server packages and configurations..."
+    sudo apt install -y btop bottom
+    echo "server packages installed sucessfully."
+}
+
 cleanup_process() {
     echo "Cleanup process has begun. Please wait..."
-    cd $HOME/gits
-    rm -rf dirtmuffin
-    rm -rf nerd-fonts
+    
+    case $CHOICE2 in
+        1)
+            echo "Cleanup option 1 selected. Removing all unnessecary files..."
+            cd $HOME/gits
+            rm -rf dirtmuffin
+            rm -rf nerd-fonts
+            ;;
+        2)
+            echo "Cleanup option 2 selected. Only removing unused fonts..."
+            cd $HOME/gits
+            rm -rf nerd-fonts
+            ;;
+        3)
+            echo "Cleanup option 3 selected. No cleanup done..."
+    esac
     echo "Cleanup process completed sucessfully."
 }
 
-# Startup message
-echo ""
-echo "Welcome to Dirtmuffin's Automatic Terminal Customizer!"
-echo "This script will install everything needed to set up your terminal."
-
-# Show list of programs to be installed
-echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
-echo "This script will install the following programs:"
-echo "Git"
-echo "ZSH"
-echo "TMUX - https://github.com/tmux"
-echo "Oh My ZSH - https://ohmyz.sh"
-echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
-
-# Show list of git repos to clone
-echo "This script will clone the following repo for customization settings"
-echo "Note: this will be deleted after the installation unless you choose 'no cleanup'"
-echo "The settings files will remain in your home directory either way"
-echo "https://github.com/dirtmuffin/dotfiles"
-echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
-
-# Show list of fonts to install
-echo "The required fonts will be installed from NerdFont:"
-echo "CaskaydiaCove Mono"
-echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
-
-# Prompt user for installation
-echo "Select an option:"
-echo "1. Install"
-echo "2. Install (NO CLEANUP)"
-echo "3. EXIT"
-read -p "Choice: " CHOICE
-
-# Process user choice and run cooresponding install
-case $CHOICE in
+# parses the user's choices and calls the needed functions.
+install_control() {
+    case $CHOICE1 in
     1)
-        echo "Running standard installation."
+        echo "Running server installation."
         install_prereqs
-        install_fonts
         install_main
-        cleanup_process
+        server_addons
         echo "Installation has completed."
         ;;
     2)
-        echo "Running NO CLEANUP installation."
+        echo "Running desktop installation."
         install_prereqs
         install_fonts
         install_main
-        echo "No cleanup installation has completed. All git repo paths and files intact."
+        echo "Installation has completed."
         ;;
     3)
         echo "Installation aborted by user. Exiting..."
@@ -111,3 +94,51 @@ case $CHOICE in
         exit 1
         ;;
 esac
+}
+
+# Startup message
+echo ""
+echo "Welcome to Dirtmuffin's Automatic Terminal Customizer!"
+echo "This script will install everything needed to set up your terminal."
+
+# Show lists of programs to be installed
+echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+echo "Included in all installations:"
+echo "Git"
+echo "ZSH"
+echo "TMUX - https://github.com/tmux"
+echo "Oh My ZSH - https://ohmyz.sh"
+echo ""
+echo "Added when choosing desktop installation:"
+echo "Font(s)"
+echo ""
+echo "Added when choosing server installation:"
+echo "btop, bottom"
+echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+
+# Show list of git repos to clone
+echo "This script will clone the following repo for customization settings"
+echo "Note: this will be deleted after the installation unless you choose 'no cleanup'"
+echo "The settings files will remain in your home directory either way"
+echo "https://github.com/dirtmuffin/dotfiles"
+echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+
+# Prompt user for installation
+echo "Select an option:"
+echo "1. Server Install (Includes btop, bottom, and excludes fonts)"
+echo "2. Desktop Install (Excludes btop, bottom, and includes fonts) (Font install is slow)"
+echo "3. EXIT"
+read -p "Choice: " CHOICE1
+
+# Prompt user to choose if cleanup happens
+echo "Post-install cleanup options. Please choose one: "
+echo "1. Cleanup everything (Removes DirtMuffin repo and unused fonts)"
+echo "2. Cleanup fonts only (Removes unused fonts, leaves DirtMuffin repo intact)"
+echo "3. No cleanup"
+read -p "Choice: " CHOICE2
+
+# Run the installation processes
+install_control
+cleanup_process
+echo "If you're reading this, everything should have ran and the setup has exited."
+exit 0
