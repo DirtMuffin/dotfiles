@@ -2,7 +2,8 @@
 
 # Creates directories needed for install
 create_directories() {
-    mkdir -p $HOME/gits/dirtmuffin || { echo "ERROR: Failed to create directory: ~/gits/dirtmuffin. Exiting..."; exit 1; }
+
+    mkdir -p $HOME/gits/dirtmuffin
 }
 
 # Installs dependencies for main installation
@@ -14,7 +15,7 @@ install_prereqs() {
     echo "Dependencies installed sucessfully."
 }
 
-# Installs fonts
+# Installs fonts TODO: Don't do this unless target system has a gui
 install_fonts() {
 echo "Installing font(s). Please wait..."
 cd $HOME/gits
@@ -27,9 +28,17 @@ echo "Font(s) installed sucessfully."
 # Pulls dirtmuffin/dotfiles repo and replaces relevant config files in home directory
 install_main() {
     echo "Installation of main components has begun. Please wait..."
-    cd $HOME/gits/dirtmuffin
-    git clone https://github.com/dirtmuffin/dotfiles
-    cd $HOME/gits/dirtmuffin/dotfiles
+    # Check if dotfiles directory already exists. If so, do git pull rather than clone.
+    if [ -d "$HOME/gits/dirtmuffin/dotfiles" ]; then
+        echo "Dirtmuffin's dotfiles directory exists. Running pull..."
+        cd $HOME/gits/dirtmuffin/dotfiles
+        git pull
+    else
+        cd $HOME/gits/dirtmuffin
+        git clone https://github.com/dirtmuffin/dotfiles
+        cd $HOME/gits/dirtmuffin/dotfiles
+    fi
+    # coppies/overwrites config files from repo to user's home directory
     cp ./.tmux.conf $HOME
     cp ./.zshrc $HOME
     echo "Main installation has been completed sucessfully."
@@ -44,6 +53,7 @@ cleanup_process() {
 }
 
 # Startup message
+echo ""
 echo "Welcome to Dirtmuffin's Automatic Terminal Customizer!"
 echo "This script will install everything needed to set up your terminal."
 
