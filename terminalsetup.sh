@@ -10,6 +10,8 @@ install_prereqs() {
     # update packages, install git and zsh
     sudo apt update
     sudo apt install -y git zsh
+    # install Oh My ZSH!
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "Dependencies installed sucessfully."
 }
 
@@ -45,7 +47,7 @@ install_main() {
 # Installs server-specific packages
 server_addons() {
     echo "Installing server packages and configurations..."
-    sudo apt install -y btop bottom
+    sudo apt install -y btop
     echo "server packages installed sucessfully."
 }
 
@@ -112,7 +114,7 @@ echo "Added when choosing desktop installation:"
 echo "Font(s)"
 echo ""
 echo "Added when choosing server installation:"
-echo "btop, bottom"
+echo "btop"
 echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 
 # Show list of git repos to clone
@@ -124,8 +126,8 @@ echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 
 # Prompt user for installation
 echo "Select an option:"
-echo "1. Server Install (Includes btop, bottom, and excludes fonts)"
-echo "2. Desktop Install (Excludes btop, bottom, and includes fonts) (Font install is slow)"
+echo "1. Server Install (Includes btop and excludes fonts)"
+echo "2. Desktop Install (Excludes btop and includes fonts) (Font install is slow)"
 echo "3. EXIT"
 read -p "Choice: " CHOICE1
 
