@@ -40,7 +40,7 @@ install_fonts() {
         esac
     fi
     #Unzips the font into the new directory then refreshes font cache to install font.
-    unzip $HOME/gits/dirtmuffin/dotfiles/CascadiaCode.zip -d /usr/share/fonts/CascadiaCode
+    sudo unzip $HOME/gits/dirtmuffin/dotfiles/CascadiaCode.zip -d /usr/share/fonts/CascadiaCode
     fc-cache -fv
 }
 
