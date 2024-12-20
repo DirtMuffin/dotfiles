@@ -9,16 +9,34 @@ install_prereqs() {
     mkdir -p $HOME/gits/dirtmuffin
     # update packages, install git and zsh
     sudo apt update
-    sudo apt install -y git zsh unzip
+    sudo apt install -y git zsh unzip cowsay
     # install Oh My ZSH!
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     echo "Dependencies installed sucessfully."
 }
 
-# Extracts the font into the shared font folder.
+# Installs the fonts if desktop installation is chosen.
 install_fonts() {
-    cd $HOME/gits/dirtmuffin/dotfiles
-    unzip CascadiaCode.zip -d /usr/share/fonts
+    #Checks if /usr/share/fonts exists, and if not, creates it if user chooses.
+    if [ -d "/usr/share/fonts" ]; then
+        cd /usr/share/fonts
+        sudo mkdir CascadiaCode
+    else
+        echo "Directory /usr/share/fonts does not exist. Would you like to create it? (1 = Yes/2 = No)"
+        read -p "Choice: " CHOICE3
+        case $CHOICE3 in
+            1)
+                echo "Creating /usr/share/fonts and adding CascadiaCode/"
+                sudo mkdir -p /usr/share/fonts/CascadiaCode
+            2)
+                echo "Installation cannot continue without creating directory. Installer aborted."
+                exit 1
+            *)
+                echo "Invalid input. I don't want to do error handling so the installer will just exit."
+                exit 1
+    fi
+    #Unzips the font into the new directory then refreshes font cache to install font.
+    unzip $HOME/gits/dirtmuffin/dotfiles/CascadiaCode.zip -d /usr/share/fonts/CascadiaCode
     fc-cache -fv
 }
 
@@ -54,18 +72,16 @@ cleanup_process() {
     
     case $CHOICE2 in
         1)
-            echo "Cleanup option 1 selected. Removing all unnessecary files..."
+            echo "Cleanup option 1 selected. Removing the DirtMuffin folder and subfolders."
             cd $HOME/gits
             rm -rf dirtmuffin
-            rm -rf nerd-fonts
             ;;
         2)
-            echo "Cleanup option 2 selected. Only removing unused fonts..."
-            cd $HOME/gits
-            rm -rf nerd-fonts
+            echo "Cleanup option 2 selected. No cleanup ran."
             ;;
-        3)
-            echo "Cleanup option 3 selected. No cleanup done..."
+        *)
+            echo "Invalid choice. I don't do the whole 'error handling' thing, so the installer will now exit. try picking a real option next time."
+            ;;
     esac
     echo "Cleanup process completed sucessfully."
 }
@@ -124,7 +140,7 @@ echo "- - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 # Prompt user for installation
 echo "Select an option:"
 echo "1. Server Install (Includes btop and excludes fonts)"
-echo "2. Desktop Install (Excludes btop and includes fonts) (Font install is slow)"
+echo "2. Desktop Install (Excludes btop and includes fonts)"
 echo "3. EXIT"
 read -p "Choice: " CHOICE1
 
@@ -135,14 +151,14 @@ if [ "$CHOICE1" -eq 3 ]; then
 else
     # Prompt user to choose if cleanup happens
     echo "Post-install cleanup options. Please choose one: "
-    echo "1. Cleanup everything (Removes DirtMuffin repo and unused fonts)"
-    echo "2. Cleanup fonts only (Removes unused fonts, leaves DirtMuffin repo intact)"
-    echo "3. No cleanup"
+    echo "1. Standard cleanup (Removes the DirtMuffin folder and its contents)"
+    echo "2. No cleanup. Leave ~/gits/DirtMuffin and all subfolders."
     read -p "Choice: " CHOICE2
 fi
 
 # Run the installation processes
 install_control
 cleanup_process
-echo "If you're reading this, everything should have ran and the setup has exited."
+
+cowsay The installation was sucessful! Oh, I meant to say moo.
 exit 0
