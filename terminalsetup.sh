@@ -160,5 +160,6 @@ fi
 install_control
 cleanup_process
 
-cowsay The installation was sucessful! Oh, I meant to say moo.
+COWFILE=$(ls /usr/share/cowsay/cows/ | shuf -n 1)
+cowsay -f "$COWFILE" "The installation has completed sucessfully <3"
 exit 0
