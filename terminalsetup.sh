@@ -34,6 +34,7 @@ install_fonts() {
             *)
                 echo "Invalid input. I don't want to do error handling so the installer will just exit."
                 exit 1
+        esac
     fi
     #Unzips the font into the new directory then refreshes font cache to install font.
     unzip $HOME/gits/dirtmuffin/dotfiles/CascadiaCode.zip -d /usr/share/fonts/CascadiaCode
@@ -107,7 +108,7 @@ install_control() {
         echo "Invalid choice. Exiting..."
         exit 1
         ;;
-esac
+    esac
 }
 
 # Startup message
