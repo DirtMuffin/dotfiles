@@ -28,12 +28,15 @@ install_fonts() {
             1)
                 echo "Creating /usr/share/fonts and adding CascadiaCode/"
                 sudo mkdir -p /usr/share/fonts/CascadiaCode
+                ;;
             2)
                 echo "Installation cannot continue without creating directory. Installer aborted."
                 exit 1
+                ;;
             *)
                 echo "Invalid input. I don't want to do error handling so the installer will just exit."
                 exit 1
+                ;;
         esac
     fi
     #Unzips the font into the new directory then refreshes font cache to install font.
